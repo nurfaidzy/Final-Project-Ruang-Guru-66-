@@ -14,6 +14,12 @@ import Masukkanreview from "./components/Masukkanreview";
 import InputUnivBaru from "./components/InputUnivBaru";
 import EditUniv from "./components/EditUniv";
 function App() {
+  const peringatan = () => {
+    alert("Mohon mengisi dengan baik sebelum meriview");
+  };
+  const peringatan2 = () => {
+    alert("Mohon memperhatikan data untuk diubah");
+  };
   return (
     <>
       <NavigationBar />
@@ -25,10 +31,16 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/Kampus" element={<Kampus />} />
-          <Route path="/detailkampus" element={<DetailKampus />} />
-          <Route path="/review" element={<Masukkanreview />} />
-          <Route path="/inpuunivbaru" element={<InputUnivBaru />} />
-          <Route path="/edituniv" element={<EditUniv />} />
+          <Route path="/Kampus/detail" element={<DetailKampus />} />
+          <Route
+            path="/Kampus/detail/review"
+            element={<Masukkanreview peringatan={peringatan} />}
+          />
+          <Route path="/Kampus/create" element={<InputUnivBaru />} />
+          <Route
+            path="/Kampus/detail/update"
+            element={<EditUniv peringatan2={peringatan2} />}
+          />
         </Routes>
       </Router>
       <Footer />
