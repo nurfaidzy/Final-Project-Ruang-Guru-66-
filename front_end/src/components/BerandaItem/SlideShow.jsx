@@ -13,20 +13,28 @@ const SlideShow = () => {
                   <td>
                     <div className="sitext">
                       <center>
-                        <h1>
-                          Temukan kampus
-                          <br />
-                          Terbaik Mu
-                          <br />
-                          <br />
+                        <h1 className="fontJudul">
+                          <strong>
+                            TEMUKAN KAMPUS
+                            <br />
+                            TERBAIKMU
+                            <br />
+                            <br />
+                          </strong>
                         </h1>
-                        <div className="input-group mb-3">
+                        <div>
+                          <a href="/Kampus" className="btn btn-success">
+                            Cari Kampus Disini
+                          </a>
+                        </div>
+                        {/* <div className="input-group mb-3">
                           <input
                             type="text"
                             className="form-control siplaceholder"
                             placeholder="C A R I K A M P U S"
                             aria-describedby="button-addon2"
                           ></input>
+
                           <button
                             className="btn btn-success"
                             type="button"
@@ -34,7 +42,7 @@ const SlideShow = () => {
                           >
                             Cari
                           </button>
-                        </div>
+                        </div> */}
                         <div className="sisapcesubjudul">
                           <h5>
                             "We will never know the real answer, before you try"
