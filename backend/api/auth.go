@@ -8,20 +8,20 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-type kampus struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+type KampusSuccsesRequest struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type KampusSucssesResponse struct {
+	Message string `json:"message"`
 }
 
 type Review struct {
-	ID       int `json:"id"`
-	KampusID int `json:"kampus_id"`
-	UserID   int `json:"user_id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
-type kampusResponse struct {
-	Message string `json:"message"`
-}
 type CreatereviewRequest struct {
 	Isian string `json:"isian"`
 }
@@ -65,44 +65,52 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func (api *API) review(w http.ResponseWriter, req *http.Request) {
-	api.AllowOrigin(w, req)
-	var reqReview CreatereviewRequest
-	err := json.NewDecoder(req.Body).Decode(&reqReview)
+func (api *API) createreview(w http.ResponseWriter, r *http.Request) {
+	api.AllowOrigin(w, r)
+	var req CreatereviewRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	token, err := req.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			// return unauthorized ketika token kosong
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		// return bad request ketika field token tidak ada
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if token.Value == "" {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	claims := &Claims{}
-	_, err = jwt.ParseWithClaims(token.Value, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	},
-	)
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
+	err = api.reviewRepo.InsertcreatReview(req.Isian)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
+}
+
+func (api *API) review(w http.ResponseWriter, r *http.Request) {
+	api.AllowOrigin(w, r)
+	var req Review
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = api.reviewRepo.InsertReview(req.Name, req.Email)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
+}
+
+func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
+	api.AllowOrigin(w, r)
+	var req KampusSuccsesRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = api.kampusRepo.InsertKampus(req.Name, req.Email)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil di tambahkan"})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {

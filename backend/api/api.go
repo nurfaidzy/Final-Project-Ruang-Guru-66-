@@ -21,7 +21,9 @@ func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRep
 		usersRepo, kampusRepo, jurusanRepo, reviewRepo, mux,
 	}
 
-	mux.HandleFunc("/review", api.review)
+	mux.HandleFunc("/api/review", api.review)
+	mux.HandleFunc("api/review", api.createreview)
+	mux.HandleFunc("api/kampus", api.kampus)
 	mux.HandleFunc("/api/register", api.register)
 	mux.HandleFunc("/api/login", api.login)
 	mux.HandleFunc("/api/logout", api.logout)

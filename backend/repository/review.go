@@ -1,6 +1,8 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type ReviewRepository struct {
 	db *sql.DB
@@ -102,3 +104,38 @@ func (r *ReviewRepository) FetchReviewByIsian(Isian string) ([]*Review, error) {
 	}
 	return review, nil
 }
+
+func (r *ReviewRepository) InsertReview(name string, email string) error {
+
+	_, err := r.db.Exec("INSERT INTO review (name string, email string) VALUES (?, ?)", name, email)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (r *ReviewRepository) InsertcreatReview(isian string) error {
+
+	_, err := r.db.Exec("INSERT INTO kampus (isian string) VALUES (?)", isian)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+// func (api *ReviewRepository) InsertReview(w http.ResponseWriter, r *http.Request) {
+// 	var review Review
+// 	err := json.NewDecoder(r.Body).Decode(&review)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+// 	err = api.reviewRepo.InsertReview(review)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusInternalServerError)
+// 		return
+// 	}
+// 	w.WriteHeader(http.StatusCreated)
+// }
