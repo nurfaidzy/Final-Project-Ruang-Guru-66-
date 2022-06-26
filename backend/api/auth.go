@@ -23,6 +23,7 @@ type Review struct {
 	Username    string `json:"username"`
 	KampusName  string `json:"kampus_name"`
 	JurusanName string `json:"jurusan_name"`
+	Isian       string `json:"isian"`
 }
 
 type CreatereviewRequest struct {
@@ -92,12 +93,12 @@ func (api *API) review(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = api.reviewRepo.InsertReview(req.Username, req.KampusName, req.JurusanName)
+	err = api.reviewRepo.InsertReview(req.Username, req.KampusName, req.JurusanName, req.Isian)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
+	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil"})
 }
 
 func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +109,7 @@ func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = api.kampusRepo.InsertKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
+	err = api.kampusRepo.FindKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -124,7 +125,7 @@ func (api *API) register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = api.usersRepo.InsertUser(req.Username, req.Email, req.Password)
+	err = api.usersRepo.Register(req.Username, req.Email, req.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
