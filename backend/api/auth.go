@@ -112,7 +112,8 @@ func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil"})
+	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil di tambahkan"})
+
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {

@@ -81,13 +81,14 @@ func (k *KampusRepository) FetchKampusByName(name string) ([]*Kampus, error) {
 // }
 
 func (k *KampusRepository) InsertKampus(name string, email string, jurusan1 string, jurusan2 string) error {
-
-	_, err := k.db.Exec("INSERT INTO kampus (name string, email string, jurusan1 string, jurusan2 string) VALUES (?, ?,?,?)", name, email)
+	query := `
+		INSERT INTO kampus (name, email, jurusan1, jurusan2) VALUES (?, ?, ?, ?)
+	`
+	_, err := k.db.Exec(query, name, email, jurusan1, jurusan2)
 	if err != nil {
 		return err
 	}
 	return nil
-
 }
 
 // func (k *KampusRepository) InsertKampus() ([]*Kampus, error) {
