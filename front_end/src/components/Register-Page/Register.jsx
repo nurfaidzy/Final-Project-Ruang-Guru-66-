@@ -26,7 +26,7 @@ const Register = () => {
       try {
         // const res = await axios.post(`${baseUrl}/api/register`, user);
         const res = await axios.post(
-          "http://localhost:8080/api/register",
+          "http://localhost:8081/api/register",
           user
         );
         localStorage.setItem("token", res.data.token);
