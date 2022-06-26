@@ -113,7 +113,6 @@ func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil di tambahkan"})
-
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {
