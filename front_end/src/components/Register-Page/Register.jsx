@@ -8,31 +8,38 @@ import axios from "axios";
 import { useState } from "react";
 const Register = () => {
   const navigate = useNavigate();
-  const baseUrl = "https://reqres.in";
+  // const baseUrl = "https://reqres.in";
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
-  const [pass, setpass] = useState("");
+  const [password, setpassword] = useState("");
   const [pass2, setpass2] = useState("");
+  const [isError, setisError] = useState(false);
+  const [error, seterror] = useState("");
   const username = name;
   const register = async () => {
-    if (pass === pass2) {
-      const password = pass;
+    if (password === pass2) {
       const user = {
-        // username,
+        username,
         email,
         password,
       };
       try {
-        const res = await axios.post(`${baseUrl}/api/register`, user);
+        // const res = await axios.post(`${baseUrl}/api/register`, user);
+        const res = await axios.post(
+          "http://localhost:8080/api/register",
+          user
+        );
         localStorage.setItem("token", res.data.token);
         setemail("");
-        setpass("");
+        setpassword("");
         setpass2("");
         setname("");
         console.log(res.data);
         navigate("/Kampus");
       } catch (err) {
-        console.log(err);
+        seterror(err.response.data.message);
+        console.log(error, isError);
+        setisError(true);
       }
     } else {
       alert("Mohon memperhatikan kesamaan password");
@@ -81,7 +88,7 @@ const Register = () => {
                           <Form.Control
                             type="password"
                             placeholder="Password"
-                            onChange={(e) => setpass(e.target.value)}
+                            onChange={(e) => setpassword(e.target.value)}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
