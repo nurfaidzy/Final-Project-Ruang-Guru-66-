@@ -94,7 +94,7 @@ func (api *API) review(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
+	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil"})
 }
 
 func (api *API) kampus(w http.ResponseWriter, r *http.Request) {

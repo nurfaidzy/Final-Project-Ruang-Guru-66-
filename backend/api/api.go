@@ -22,7 +22,7 @@ func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRep
 	}
 
 	mux.HandleFunc("/api/review", api.review)
-	mux.HandleFunc("api/review", api.createreview)
+	mux.HandleFunc("api/createreview", api.createreview)
 	mux.HandleFunc("api/kampus", api.kampus)
 	mux.HandleFunc("/api/register", api.register)
 	mux.HandleFunc("/api/login", api.login)
@@ -37,5 +37,9 @@ func (api *API) Handler() *http.ServeMux {
 
 func (api *API) Start() {
 	fmt.Println("starting web server at http://localhost:8080")
-	http.ListenAndServe(":8080", api.Handler())
+	server := &http.Server{
+		Addr:    "https://localhost:8080",
+		Handler: api.mux,
+	}
+	server.ListenAndServe()
 }
