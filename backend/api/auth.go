@@ -9,8 +9,10 @@ import (
 )
 
 type KampusSuccsesRequest struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Jurusan1 string `json:"jurusan1"`
+	Jurusan2 string `json:"jurusan2"`
 }
 
 type KampusSucssesResponse struct {
@@ -105,12 +107,12 @@ func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = api.kampusRepo.InsertKampus(req.Name, req.Email)
+	err = api.kampusRepo.InsertKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil di tambahkan"})
+	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil"})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {

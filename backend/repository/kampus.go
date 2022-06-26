@@ -80,9 +80,9 @@ func (k *KampusRepository) FetchKampusByName(name string) ([]*Kampus, error) {
 // 	return nil
 // }
 
-func (u *KampusRepository) InsertKampus(name string, email string) error {
+func (k *KampusRepository) InsertKampus(name string, email string, jurusan1 string, jurusan2 string) error {
 
-	_, err := u.db.Exec("INSERT INTO kampus (name string, email string) VALUES (?, ?)", name, email)
+	_, err := k.db.Exec("INSERT INTO kampus (name string, email string, jurusan1 string, jurusan2 string) VALUES (?, ?,?,?)", name, email)
 	if err != nil {
 		return err
 	}
