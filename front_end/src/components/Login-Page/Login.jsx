@@ -20,7 +20,7 @@ function Login() {
     };
     try {
       // const res = await axios.post(`${baseUrl}/api/login`, user);
-      const res = await axios.post("http://localhost:8080/api/login", user);
+      const res = await axios.post("http://localhost:8081/api/login", user);
       localStorage.setItem("token", res.data.token);
       setusername("");
       setpassword("");
