@@ -63,9 +63,19 @@ func (u *UserRepository) Login(username string, password string) (*string, error
 
 }
 
-func (u *UserRepository) InsertUser(username string, email string, password string) error {
+func (u *UserRepository) Register(username string, email string, password string) error {
 
 	_, err := u.db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, password)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (u *UserRepository) InsertUser(Username string, Email string, Password string) error {
+
+	_, err := u.db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", Username, Email, Password)
 	if err != nil {
 		return err
 	}

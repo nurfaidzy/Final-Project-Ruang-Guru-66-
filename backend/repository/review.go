@@ -105,9 +105,9 @@ func (r *ReviewRepository) FetchReviewByIsian(Isian string) ([]*Review, error) {
 	return review, nil
 }
 
-func (r *ReviewRepository) InsertReview(username string, kampus_name string, jurusan_name string) error {
+func (r *ReviewRepository) InsertReview(Username string, KampusName string, JurusanName string, Isian string) error {
 
-	_, err := r.db.Exec("INSERT INTO review (username string, kampus_name string, jurusan_name string) VALUES (?, ?, ?)", username, kampus_name, jurusan_name)
+	_, err := r.db.Exec("INSERT INTO review (username, kampus_name, jurusan_name, isian) VALUES (?, ?, ?, ?)", Username, KampusName, JurusanName, Isian)
 	if err != nil {
 		return err
 	}
@@ -115,9 +115,9 @@ func (r *ReviewRepository) InsertReview(username string, kampus_name string, jur
 
 }
 
-func (r *ReviewRepository) InsertcreatReview(isian string) error {
+func (r *ReviewRepository) InsertcreatReview(Isian string) error {
 
-	_, err := r.db.Exec("INSERT INTO kampus (isian string) VALUES (?)", isian)
+	_, err := r.db.Exec("INSERT INTO kampus (isian string) VALUES (?)", Isian)
 	if err != nil {
 		return err
 	}
