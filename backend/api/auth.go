@@ -8,6 +8,28 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+type kampus struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type Review struct {
+	ID       int `json:"id"`
+	KampusID int `json:"kampus_id"`
+	UserID   int `json:"user_id"`
+}
+
+type kampusResponse struct {
+	Message string `json:"message"`
+}
+type CreatereviewRequest struct {
+	Isian string `json:"isian"`
+}
+
+type CreatereviewResponse struct {
+	Message string `json:"message"`
+}
+
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -41,6 +63,46 @@ var jwtKey = []byte("key")
 type Claims struct {
 	Username string
 	jwt.StandardClaims
+}
+
+func (api *API) review(w http.ResponseWriter, req *http.Request) {
+	api.AllowOrigin(w, req)
+	var reqReview CreatereviewRequest
+	err := json.NewDecoder(req.Body).Decode(&reqReview)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	token, err := req.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			// return unauthorized ketika token kosong
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// return bad request ketika field token tidak ada
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if token.Value == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	claims := &Claims{}
+	_, err = jwt.ParseWithClaims(token.Value, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	},
+	)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {

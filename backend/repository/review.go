@@ -84,7 +84,7 @@ func (r *ReviewRepository) FetchReviewByUserID(UserID int64) ([]*Review, error) 
 func (r *ReviewRepository) FetchReviewByIsian(Isian string) ([]*Review, error) {
 	var review []*Review
 	query := `
-		SELECT * FROM review WHERE isian = ? 
+		SELECT id, id_user, id_kampus, id_jurusan, isian FROM review WHERE isian = ? 
 	`
 	rows, err := r.db.Query(query, Isian)
 	if err != nil {

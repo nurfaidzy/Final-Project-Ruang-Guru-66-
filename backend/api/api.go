@@ -20,6 +20,8 @@ func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRep
 	api := API{
 		usersRepo, kampusRepo, jurusanRepo, reviewRepo, mux,
 	}
+
+	mux.HandleFunc("/review", api.review)
 	mux.HandleFunc("/api/register", api.register)
 	mux.HandleFunc("/api/login", api.login)
 	mux.HandleFunc("/api/logout", api.logout)
