@@ -8,19 +8,19 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const baseUrl = "https://reqres.in";
+  // const baseUrl = "https://reqres.in";
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const [isError, setisError] = useState(false);
   const [error, seterror] = useState("");
-  const email = username;
   const userlogin = async () => {
     const user = {
-      email,
+      username,
       password,
     };
     try {
-      const res = await axios.post(`${baseUrl}/api/login`, user);
+      // const res = await axios.post(`${baseUrl}/api/login`, user);
+      const res = await axios.post("http://localhost:8080/api/login", user);
       localStorage.setItem("token", res.data.token);
       setusername("");
       setpassword("");
