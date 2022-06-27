@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "./CARKAMM.db")
+	db, err := sql.Open("sqlite3", "./TARKAM.db")
 	if err != nil {
 		panic(err)
 	}

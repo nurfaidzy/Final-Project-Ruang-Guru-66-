@@ -16,7 +16,8 @@ type KampusSuccsesRequest struct {
 }
 
 type KampusSucssesResponse struct {
-	Message string `json:"message"`
+	KampusName string `json:"kampus_name"`
+	Message    string `json:"message"`
 }
 
 type Review struct {
@@ -24,6 +25,10 @@ type Review struct {
 	KampusName  string `json:"kampus_name"`
 	JurusanName string `json:"jurusan_name"`
 	Isian       string `json:"isian"`
+}
+
+type ReviewSuccsesResponse struct {
+	Message string `json:"message"`
 }
 
 type CreatereviewRequest struct {
@@ -82,7 +87,37 @@ func (api *API) createreview(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
+		return
+	}
+	expirationTime := time.Now().Add(60 * time.Minute)
+
+	claims := &Claims{
+		Username: req.Isian,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+		Path:    "/api/review/isian",
+	})
 	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
+
 }
 
 func (api *API) review(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +133,36 @@ func (api *API) review(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil"})
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
+		return
+	}
+	expirationTime := time.Now().Add(60 * time.Minute)
+
+	claims := &Claims{
+		Username: req.Username,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+		Path:    "/api/review",
+	})
+	json.NewEncoder(w).Encode(ReviewSuccsesResponse{Message: "Berhasil di tambahkan"})
 }
 
 func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
@@ -109,12 +173,41 @@ func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = api.kampusRepo.FindKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
+	err = api.kampusRepo.InsertKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(KampusSucssesResponse{Message: "Berhasil di tambahkan"})
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
+		return
+	}
+	expirationTime := time.Now().Add(60 * time.Minute)
+
+	claims := &Claims{
+		Username: req.Name,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString(jwtKey)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+		Path:    "/api/kampus",
+	})
+	json.NewEncoder(w).Encode(KampusSucssesResponse{KampusName: req.Name, Message: "Berhasil di tambahkan"})
 }
 
 func (api *API) register(w http.ResponseWriter, r *http.Request) {
@@ -171,7 +264,7 @@ func (api *API) login(w http.ResponseWriter, req *http.Request) {
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,
-		Path:    "/",
+		Path:    "/api/login",
 	})
 	json.NewEncoder(w).Encode(LoginSuccessResponse{Username: *res, Token: tokenString})
 }
