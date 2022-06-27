@@ -1,5 +1,5 @@
-import { Container } from "react-bootstrap";
-import siganteng from "./image/Animation1.png";
+import { Container } from 'react-bootstrap';
+import siganteng from './image/Animation1.png';
 
 const OurTeam = () => {
   return (
@@ -14,7 +14,7 @@ const OurTeam = () => {
           <div className="backlagi rounded-3">
             <div className="kasihjarak ">
               <center>
-                <h3>F R O N T E N D &nbsp; D E V E L O P E R</h3>
+                <h3 class="fw-bold">F R O N T E N D &nbsp; D E V E L O P E R</h3>
               </center>
               <div className="kasihjarak">
                 <center>
@@ -24,8 +24,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark ">
+                              <b>Nurfaidzy Riyamizard</b>
                             </a>
                           </div>
                         </div>
@@ -34,8 +34,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark">
+                              <b>Ahmad Farizi</b>
                             </a>
                           </div>
                         </div>
@@ -44,8 +44,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark">
+                              <b>Dicky Manurung</b>
                             </a>
                           </div>
                         </div>
@@ -54,8 +54,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark ">
+                              <b>Alya Novita</b>
                             </a>
                           </div>
                         </div>
@@ -72,7 +72,7 @@ const OurTeam = () => {
           <div className="backlagi rounded-3">
             <div className="kasihjarak ">
               <center>
-                <h3>B A C K E N D &nbsp; D E V E L O P E R</h3>
+                <h3 class="fw-bold">B A C K E N D &nbsp; D E V E L O P E R</h3>
               </center>
               <div className="kasihjarak2">
                 <center>
@@ -82,8 +82,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark">
+                              <b>Ario Prima</b>
                             </a>
                           </div>
                         </div>
@@ -92,8 +92,8 @@ const OurTeam = () => {
                         <div className="card-body">
                           <img src={siganteng} alt="" />
                           <div className="pt-5 ">
-                            <a href="#" className="btn btn-dark text-info">
-                              <b>Salina Hehanusa</b>
+                            <a href="#" className="btn btn-warning text-dark">
+                              <b>Aditya H.S</b>
                             </a>
                           </div>
                         </div>
