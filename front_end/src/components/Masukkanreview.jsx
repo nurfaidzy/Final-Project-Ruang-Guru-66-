@@ -12,7 +12,7 @@ const Masukkanreview = () => {
   const { id } = useParams();
   console.log(id);
 
-  const baseUrl = "https://reqres.in";
+  // const baseUrl = "https://reqres.in";
   const [nama, setnama] = useState("");
   const [email, setemail] = useState("");
   const [pendapat, setpendapat] = useState("");
@@ -21,11 +21,13 @@ const Masukkanreview = () => {
       alert("Data tidak boleh kosong");
     } else {
       const data = {
-        name: nama,
-        job: pendapat,
+        username: nama,
+        kampus_name: id,
+        jurusan_name: id,
+        isian: pendapat,
       };
       try {
-        const res = await axios.post(`${baseUrl}/api/users`, data);
+        const res = await axios.post(`http://localhost:8081/api/review`, data);
         console.log(res.data);
         setnama("");
         setemail("");
