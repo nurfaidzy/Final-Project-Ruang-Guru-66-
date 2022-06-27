@@ -1,8 +1,8 @@
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-import KM from "./image/KM.png";
-import { useEffect } from "react";
-import useStore from "./Store";
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import KM from './image/KM.png';
+import { useEffect } from 'react';
+import useStore from './Store';
 
 const ListKampus = (props) => {
   const dapat = props.cari;
@@ -18,7 +18,7 @@ const ListKampus = (props) => {
     <>
       <div>
         <center>
-          <h3>Pilih sepuasnya dan bedah hingga dapat</h3>
+          <h4 class="mb-4 mt-5 text-dark fw-bold">Ketahui peluang kerja di masa depan dengan kampus terbaikmu</h4>
         </center>
         <div className="container">
           <div className="row pt-3 ">
@@ -26,7 +26,7 @@ const ListKampus = (props) => {
               if (item.first_name.toLowerCase().includes(dapat)) {
                 return (
                   <div className="col-md-3 pb-3 ">
-                    <Card style={{ width: "18rem" }}>
+                    <Card style={{ width: '18rem' }}>
                       <Card.Img variant="top" src={KM} />
                       <Card.Body>
                         <Card.Title>{item.first_name}</Card.Title>
@@ -40,10 +40,7 @@ const ListKampus = (props) => {
                         <ListGroup.Item>{item.email}</ListGroup.Item>
                       </ListGroup>
                       <Card.Body>
-                        <a
-                          className="btn btn-success w-100"
-                          href={`/Kampus/detail/${item.id}`}
-                        >
+                        <a className="btn btn-success w-100" href={`/Kampus/detail/${item.id}`}>
                           Lihat
                         </a>
                       </Card.Body>

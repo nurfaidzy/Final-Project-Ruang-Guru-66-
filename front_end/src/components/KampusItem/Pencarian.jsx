@@ -1,17 +1,17 @@
-import Systemnya from "./image/FAQ-Vector.png";
-import ListKampus from "./ListKampus";
-import useStore from "./Store";
+import Systemnya from './image/FAQ-Vector.png';
+import ListKampus from './ListKampus';
+import useStore from './Store';
 
 const Pencarian = () => {
   const setCari = useStore((state) => state.setCari);
   const cari = useStore((state) => state.cari);
   const kirim = cari;
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (token === null) {
-    console.log("token null");
+    console.log('token null');
   } else {
-    console.log("token not null");
+    console.log('token not null');
   }
 
   return (
@@ -20,11 +20,8 @@ const Pencarian = () => {
         <div class="row">
           <div class="col-md-6 pt-5">
             <center>
-              <h3>Cari Kampus kamu disini</h3>
-              <p>
-                Cari kampus yang kamu inginkan lalu temukan sesuai rekomendasi
-                mu
-              </p>
+              <h3>Cari Kampus Kamu Disini</h3>
+              <p>Cari kampus yang kamu inginkan lalu temukan sesuai rekomendasimu</p>
             </center>
             <div className="input-group mb-3">
               <input
@@ -36,11 +33,7 @@ const Pencarian = () => {
                   setCari(e.target.value);
                 }}
               ></input>
-              <button
-                className="btn btn-success"
-                type="submit"
-                id="button-addon2"
-              >
+              <button className="btn btn-success" type="submit" id="button-addon2">
                 Cari
               </button>
             </div>
