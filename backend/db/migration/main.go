@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "../../CARKAMM.db")
+	db, err := sql.Open("sqlite3", "../../TARKAM.db")
 	if err != nil {
 		panic(err)
 	}
@@ -37,16 +37,7 @@ func main() {
 			isian varhar(255) not null
 		);
 		Insert into users (username, email, password) values ("user","user","user" );
-		Insert into kampus (name, email, jurusan1, jurusan2) values ("Universitas Indonesia", "humas-ui@ui.ac.id", "Ilmu Komputer", "Pendidikan Dokter"),
-		("Institut Teknologi Bandung", "info-center@itb.ac.id", "Teknik Informatika", "Teknik Elektro"),
-		("Universitas Gadjah" , "info@ugm.ac.id", "Ilmu Komputer", "Teknik Nuklir"), 
-		("Universitas Padjajaran", "humas@unpad.ac.id", "Psikologi", "Pendidikan Dokter"),
-		("Institut Teknologi Sepuluh November", "humas@its.ac.id", "Teknik Elektro", "Ilmu Komputer"),
-		("Institut Pertanian Bogor", "humas@ipb.ac.id", "Kehutanan", "Peternakan"),
-		("Universitas Diponegoro", "humas@live.undip.ac.id", "Psikologi", "Ilmu Hukum"),
-		("Universitas Negeri Yogyakarta", "humas@uny.ac.id", "Teknik Sipil", "Teknik Elektro"),
-		("Universitas Negeri Jakarta", "humas@unj.ac.id", "Matematika", "Statistika"),
-		("Universitas Pendidikan Indonesia", "sekuniv_upi@upi.edu", "Teknik Elektro", "Teknik Sipil");
+		Insert into kampus (name, email, jurusan1, jurusan2) values ("Universitas Indonesia", "humas-ui@ui.ac.id", "Ilmu Komputer", "Pendidikan Dokter");
 		Insert into jurusan (name) values ("Ilmu Komputer");
 		Insert into review (username, kampus_name, jurusan_name, isian) values ("user", "Universitas Indonesia", "Ilmu Komputer", "isian");
 	`)
