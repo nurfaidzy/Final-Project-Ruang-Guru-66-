@@ -10,9 +10,9 @@ type JurusanListErrorResponse struct {
 }
 
 type Jurusanjson struct {
-	Id_jurusan   string `json:"id_jurusan"`
+	Id_jurusan   int64  `json:"id_jurusan"`
+	Nama_kampus  string `json:"nama_kampus"`
 	Nama_jurusan string `json:"nama_jurusan"`
-	Id_user      string `json:"id_user"`
 }
 
 type JurusanListSuccessResponse struct {
@@ -35,10 +35,13 @@ func (api *API) JurusanList(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	for _, kajurusans := range jurusans {
+	for _, jurus := range jurusans {
 		response.Jurusan = append(response.Jurusan, Jurusanjson{
-			Nama_jurusan: kajurusans.Nama_jurusan,
+			Id_jurusan:   jurus.Id_jurusan,
+			Nama_kampus:  jurus.Nama_kampus,
+			Nama_jurusan: jurus.Nama_jurusan,
 		})
 	}
+
 	encoder.Encode(response)
 }

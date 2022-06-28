@@ -56,14 +56,13 @@ func (u *UserRepository) Login(username string, password string) (*string, error
 	//endanswer return nil, nil
 }
 
-func (u *UserRepository) InsertUser(username string, password string, role string) error {
-	//beginanswer
-	_, err := u.db.Exec("INSERT INTO user (username, password, role) VALUES (?, ?, ?)", username, password, role)
+func (u *UserRepository) InsertUser(Username string, Password string, Role string) error {
+
+	_, err := u.db.Exec("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", Username, Password, Role)
 	if err != nil {
 		return err
 	}
 	return nil
-	//endanswer return nil
 }
 
 func (u *UserRepository) FetchUserRole(username string) (*string, error) {

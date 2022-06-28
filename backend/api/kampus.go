@@ -52,7 +52,7 @@ func (api *API) Kampuslist(w http.ResponseWriter, req *http.Request) {
 			Telepon_kampus:  kakampuss.Telepon_kampus,
 			Email_kampus:    kakampuss.Email_kampus,
 			Website_kampus:  kakampuss.Website_kampus,
-			Logo_kampus:     kakampuss.Logo_kampus,
+			Logo_kampus:     kakampuss.Logo_Kampus,
 		})
 	}
 	encoder.Encode(response)
