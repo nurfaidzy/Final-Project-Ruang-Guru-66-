@@ -6,53 +6,38 @@ type JurusanRepository struct {
 	db *sql.DB
 }
 
-type Jurusan struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-}
-
 func NewJurusanRepository(db *sql.DB) *JurusanRepository {
 	return &JurusanRepository{db: db}
 }
 
-func (j *JurusanRepository) FetchJurusanByID(id int64) ([]*Jurusan, error) {
-	var jurusan []*Jurusan
-	query := `
-		SELECT 	id, name FROM jurusan WHERE id = ?
+func (j *JurusanRepository) GetListJurusan() ([]Jurusan, error) {
+	var sqlStatement string
+	var juruss []Jurusan
+	sqlStatement = `
+		SELECT 
+			id_jurusan,
+			nama_jurusan,
+			id_user
+		FROM jurusan
+		
 	`
-	rows, err := j.db.Query(query, id)
+	rows, err := j.db.Query(sqlStatement)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	for rows.Next() {
-		var jurusanTemp Jurusan
-		err := rows.Scan(&jurusanTemp.ID, &jurusanTemp.Name)
-		if err != nil {
-			return nil, err
-		}
-		jurusan = append(jurusan, &jurusanTemp)
-	}
-	return jurusan, nil
-}
 
-func (j *JurusanRepository) FetchJurusanByName(name string) ([]*Jurusan, error) {
-	var jurusan []*Jurusan
-	query := `
-		SELECT 	id, nameFROM jurusan WHERE name = ?
-	`
-	rows, err := j.db.Query(query, name)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
 	for rows.Next() {
-		var jurusanTemp Jurusan
-		err := rows.Scan(&jurusanTemp.ID, &jurusanTemp.Name)
+		var jurus Jurusan
+		err := rows.Scan(
+			&jurus.Id_jurusan,
+			&jurus.Nama_jurusan,
+			&jurus.Id_user,
+		)
 		if err != nil {
 			return nil, err
 		}
-		jurusan = append(jurusan, &jurusanTemp)
+		juruss = append(juruss, jurus)
 	}
-	return jurusan, nil
+	return juruss, nil
 }
