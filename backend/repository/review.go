@@ -1,126 +1,54 @@
 package repository
 
-import (
-	"database/sql"
-)
+import "database/sql"
 
 type ReviewRepository struct {
 	db *sql.DB
-}
-
-type Review struct {
-	ID          int64  `json:"id"`
-	Username    string `json:"username"`
-	KampusName  string `json:"kampus_name"`
-	JurusanName string `json:"jurusan_name"`
-	Isian       string `json:"isian"`
 }
 
 func NewReviewRepository(db *sql.DB) *ReviewRepository {
 	return &ReviewRepository{db: db}
 }
 
-func (r *ReviewRepository) FetchReviewByID(id int64) ([]*Review, error) {
-	var review []*Review
-	query := `
-		SELECT id, username, kampus_name, jurusan_name, isian FROM review WHERE id = ?
+func (r *ReviewRepository) GetListReview() ([]Review, error) {
+	var sqlStatement string
+	var reviews []Review
+	sqlStatement = `
+		SELECT 
+			id_review,
+			id_user,
+			id_jurusan,
+			review,
+			rating
+		FROM review
 	`
-	rows, err := r.db.Query(query, id)
+	rows, err := r.db.Query(sqlStatement)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
+
 	for rows.Next() {
-		var reviewTemp Review
-		err := rows.Scan(&reviewTemp.ID, &reviewTemp.Username, &reviewTemp.KampusName, &reviewTemp.JurusanName, &reviewTemp.Isian)
+		var review Review
+		err := rows.Scan(
+			&review.Id_review,
+			&review.Id_user,
+			&review.Id_jurusan,
+			&review.Review,
+			&review.Rating,
+		)
 		if err != nil {
 			return nil, err
 		}
-		review = append(review, &reviewTemp)
+		reviews = append(reviews, review)
 	}
-	return review, nil
+	return reviews, nil
 }
 
-func (r *ReviewRepository) FetchReviewByKampusID(Kampus string) ([]*Review, error) {
-	var review []*Review
-	query := `
-	SELECT id, username, kampus_name, jurusan_name, isian FROM review WHERE id = ?
-	`
-	rows, err := r.db.Query(query, Kampus)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var reviewTemp Review
-		err := rows.Scan(&reviewTemp.ID, &reviewTemp.Username, &reviewTemp.KampusName, &reviewTemp.JurusanName, &reviewTemp.Isian)
-		if err != nil {
-			return nil, err
-		}
-		review = append(review, &reviewTemp)
-	}
-	return review, nil
-}
-
-func (r *ReviewRepository) FetchReviewByUserID(UserID int64) ([]*Review, error) {
-	var review []*Review
-	query := `
-		SELECT id, username, kampus_name, jurusan_name, isian FROM review WHERE id = ?
-	`
-	rows, err := r.db.Query(query, UserID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var reviewTemp Review
-		err := rows.Scan(&reviewTemp.ID, &reviewTemp.Username, &reviewTemp.KampusName, &reviewTemp.JurusanName, &reviewTemp.Isian)
-		if err != nil {
-			return nil, err
-		}
-		review = append(review, &reviewTemp)
-	}
-	return review, nil
-}
-
-func (r *ReviewRepository) FetchReviewByIsian(Isian string) ([]*Review, error) {
-	var review []*Review
-	query := `
-		SELECT id, username, kampus_name, jurusan_name, isian FROM review WHERE id = ?
-	`
-	rows, err := r.db.Query(query, Isian)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var reviewTemp Review
-		//review
-		err := rows.Scan(&reviewTemp.ID, &reviewTemp.Username, &reviewTemp.KampusName, &reviewTemp.JurusanName, &reviewTemp.Isian)
-		if err != nil {
-			return nil, err
-		}
-		review = append(review, &reviewTemp)
-	}
-	return review, nil
-}
-
-func (r *ReviewRepository) InsertReview(Username string, KampusName string, JurusanName string, Isian string) error {
-
-	_, err := r.db.Exec("INSERT INTO review (username, kampus_name, jurusan_name, isian) VALUES (?, ?, ?, ?)", Username, KampusName, JurusanName, Isian)
+func (r *ReviewRepository) InsertReview(Review string) error {
+	_, err := r.db.Exec("INSERT INTO review (review) VALUES ( ?)", Review)
 	if err != nil {
 		return err
 	}
 	return nil
-
-}
-
-func (r *ReviewRepository) InsertcreatReview(Isian string) error {
-
-	_, err := r.db.Exec("INSERT INTO kampus (isian string) VALUES (?)", Isian)
-	if err != nil {
-		return err
-	}
-	return nil
-
 }

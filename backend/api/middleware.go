@@ -73,9 +73,24 @@ func (api *API) AuthMiddleWare(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), "username", claims.Username)
-
+		ctx = context.WithValue(ctx, "role", claims.Role)
 		ctx = context.WithValue(ctx, "props", claims)
 		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func (api *API) AdminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		api.AllowOrigin(w, r)
+		encoder := json.NewEncoder(w)
+		role := r.Context().Value("role")
+		if role != "admin" {
+			w.WriteHeader(http.StatusForbidden)
+			encoder.Encode(AuthErrorResponse{Error: "forbidden access"})
+			return
+		}
+
+		next.ServeHTTP(w, r)
 	})
 }
 

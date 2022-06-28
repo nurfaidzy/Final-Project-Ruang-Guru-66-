@@ -2,55 +2,25 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 )
-
-type KampusSuccsesRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Jurusan1 string `json:"jurusan1"`
-	Jurusan2 string `json:"jurusan2"`
-}
-
-type KampusSucssesResponse struct {
-	KampusName string `json:"kampus_name"`
-	Message    string `json:"message"`
-}
-
-type Review struct {
-	Username    string `json:"username"`
-	KampusName  string `json:"kampus_name"`
-	JurusanName string `json:"jurusan_name"`
-	Isian       string `json:"isian"`
-}
-
-type ReviewSuccsesResponse struct {
-	Message string `json:"message"`
-}
-
-type CreatereviewRequest struct {
-	Isian string `json:"isian"`
-}
-
-type CreatereviewResponse struct {
-	Message string `json:"message"`
-}
-
-type RegisterRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
 
 type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type RegisterSuccessResponse struct {
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+
+type RegisterRespone struct {
 	Message string `json:"message"`
 }
 
@@ -59,172 +29,39 @@ type LoginSuccessResponse struct {
 	Token    string `json:"token"`
 }
 
-type LogoutSuccessResponse struct {
-	Message string `json:"message"`
-}
-
 type AuthErrorResponse struct {
 	Error string `json:"error"`
 }
 
+// Jwt key yang akan dipakai untuk membuat signature
 var jwtKey = []byte("key")
 
+// Struct claim digunakan sebagai object yang akan di encode oleh jwt
+// jwt.StandardClaims ditambahkan sebagai embedded type untuk provide standart claim yang biasanya ada pada JWT
 type Claims struct {
 	Username string
+	Role     string
 	jwt.StandardClaims
 }
 
-func (api *API) createreview(w http.ResponseWriter, r *http.Request) {
-	api.AllowOrigin(w, r)
-	var req CreatereviewRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
+func (api *API) register(w http.ResponseWriter, req *http.Request) {
+	api.AllowOrigin(w, req)
+	var registerRequest RegisterRequest
+	err := json.NewDecoder(req.Body).Decode(&registerRequest)
 	if err != nil {
+		log.Fatal(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = api.reviewRepo.InsertcreatReview(req.Isian)
+	err = api.usersRepo.InsertUser(registerRequest.Username, registerRequest.Password, registerRequest.Role)
 	if err != nil {
+		log.Fatal(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
-		return
-	}
-	expirationTime := time.Now().Add(60 * time.Minute)
-
-	claims := &Claims{
-		Username: req.Isian,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString(jwtKey)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-		Path:    "/api/review/isian",
+	json.NewEncoder(w).Encode(RegisterRespone{
+		Message: "berhasil ditambahkan",
 	})
-	json.NewEncoder(w).Encode(CreatereviewResponse{Message: "Berhasil di tambahkan"})
-
-}
-
-func (api *API) review(w http.ResponseWriter, r *http.Request) {
-	api.AllowOrigin(w, r)
-	var req Review
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	err = api.reviewRepo.InsertReview(req.Username, req.KampusName, req.JurusanName, req.Isian)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
-		return
-	}
-	expirationTime := time.Now().Add(60 * time.Minute)
-
-	claims := &Claims{
-		Username: req.Username,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString(jwtKey)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-		Path:    "/api/review",
-	})
-	json.NewEncoder(w).Encode(ReviewSuccsesResponse{Message: "Berhasil di tambahkan"})
-}
-
-func (api *API) kampus(w http.ResponseWriter, r *http.Request) {
-	api.AllowOrigin(w, r)
-	var req KampusSuccsesRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	err = api.kampusRepo.InsertKampus(req.Name, req.Email, req.Jurusan1, req.Jurusan2)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
-		return
-	}
-	expirationTime := time.Now().Add(60 * time.Minute)
-
-	claims := &Claims{
-		Username: req.Name,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString(jwtKey)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-		Path:    "/api/kampus",
-	})
-	json.NewEncoder(w).Encode(KampusSucssesResponse{KampusName: req.Name, Message: "Berhasil di tambahkan"})
-}
-
-func (api *API) register(w http.ResponseWriter, r *http.Request) {
-	var req RegisterRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	err = api.usersRepo.Register(req.Username, req.Email, req.Password)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	json.NewEncoder(w).Encode(RegisterSuccessResponse{Message: "Berhasil di tambahkan"})
 }
 
 func (api *API) login(w http.ResponseWriter, req *http.Request) {
@@ -235,37 +72,49 @@ func (api *API) login(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	res, err := api.usersRepo.Login(user.Username, user.Password)
 
 	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(AuthErrorResponse{Error: "Login Failed"})
+		encoder.Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
+
+	userRole, _ := api.usersRepo.FetchUserRole(*res)
+
+	// Deklarasi expiry time untuk token jwt
 	expirationTime := time.Now().Add(60 * time.Minute)
 
+	// Buat claim menggunakan variable yang sudah didefinisikan diatas
 	claims := &Claims{
-		Username: *res,
+		Username: user.Username,
+		Role:     *userRole,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	// Buat jwt string dari token yang sudah dibuat menggunakan JWT key yang telah dideklarasikan
 	tokenString, err := token.SignedString(jwtKey)
-
 	if err != nil {
+		// return internal error ketika ada kesalahan ketika pembuatan JWT string
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	// Set token string kedalam cookie response
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,
-		Path:    "/api/login",
+		Path:    "/",
 	})
+
 	json.NewEncoder(w).Encode(LoginSuccessResponse{Username: *res, Token: tokenString})
 }
 
@@ -295,5 +144,5 @@ func (api *API) logout(w http.ResponseWriter, req *http.Request) {
 	http.SetCookie(w, &c)
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("SUKSES LOGOUT"))
+	w.Write([]byte("logged out"))
 }

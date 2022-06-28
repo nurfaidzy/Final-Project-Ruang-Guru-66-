@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rg-km/final-project-engineering-66/repository"
+	"github.com/rg-km/final-project-engineering-66/backend/repository"
 )
 
 type API struct {
@@ -15,20 +15,19 @@ type API struct {
 	mux         *http.ServeMux
 }
 
-func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRepository, jurusanRepo repository.JurusanRepository, reviewRepo repository.ReviewRepository) *API {
+func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRepository, jurusanRepo repository.JurusanRepository, reviewRepo repository.ReviewRepository) API {
 	mux := http.NewServeMux()
 	api := API{
 		usersRepo, kampusRepo, jurusanRepo, reviewRepo, mux,
 	}
+	mux.Handle("/api/user/login", http.HandlerFunc(api.login))
+	mux.Handle("/api/user/register", http.HandlerFunc(api.register))
+	mux.Handle("/api/user/logout", http.HandlerFunc(api.logout))
+	mux.Handle("/api/kampus/list", http.HandlerFunc(api.Kampuslist))
+	mux.Handle("/api/jurusan/list", http.HandlerFunc(api.JurusanList))
+	mux.Handle("/api/review/insetreview", http.HandlerFunc(api.InsertReview))
 
-	mux.HandleFunc("/api/review", api.review)
-	mux.HandleFunc("api/review/isian", api.createreview)
-	mux.HandleFunc("api/kampus", api.kampus)
-	mux.HandleFunc("/api/register", api.register)
-	mux.HandleFunc("/api/login", api.login)
-	mux.HandleFunc("/api/logout", api.logout)
-
-	return &api
+	return api
 }
 
 func (api *API) Handler() *http.ServeMux {
@@ -36,6 +35,7 @@ func (api *API) Handler() *http.ServeMux {
 }
 
 func (api *API) Start() {
-	fmt.Println("starting web server at http://localhost:8081")
-	http.ListenAndServe(":8081", api.Handler())
+	fmt.Println("starting web server at http://localhost:8080")
+	http.ListenAndServe(":8080", api.mux)
+
 }
