@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
@@ -49,19 +48,18 @@ func (api *API) register(w http.ResponseWriter, req *http.Request) {
 	var registerRequest RegisterRequest
 	err := json.NewDecoder(req.Body).Decode(&registerRequest)
 	if err != nil {
-		log.Fatal(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
 	err = api.usersRepo.InsertUser(registerRequest.Username, registerRequest.Password, registerRequest.Role)
 	if err != nil {
-		log.Fatal(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(AuthErrorResponse{Error: err.Error()})
 		return
 	}
-	json.NewEncoder(w).Encode(RegisterRespone{
-		Message: "berhasil ditambahkan",
-	})
+	json.NewEncoder(w).Encode(RegisterRespone{Message: "User berhasil ditambahkan"})
+
 }
 
 func (api *API) login(w http.ResponseWriter, req *http.Request) {
