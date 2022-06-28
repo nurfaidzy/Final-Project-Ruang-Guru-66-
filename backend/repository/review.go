@@ -17,7 +17,8 @@ func (r *ReviewRepository) GetListReview() ([]Review, error) {
 		SELECT 
 			id_review,
 			id_user,
-			id_jurusan,
+			nama_kampus,
+			nama_jurusan,
 			review,
 			rating
 		FROM review
@@ -33,7 +34,8 @@ func (r *ReviewRepository) GetListReview() ([]Review, error) {
 		err := rows.Scan(
 			&review.Id_review,
 			&review.Id_user,
-			&review.Id_jurusan,
+			&review.Nama_kampus,
+			&review.Nama_jurusan,
 			&review.Review,
 			&review.Rating,
 		)
@@ -45,10 +47,11 @@ func (r *ReviewRepository) GetListReview() ([]Review, error) {
 	return reviews, nil
 }
 
-func (r *ReviewRepository) InsertReview(Review string) error {
-	_, err := r.db.Exec("INSERT INTO review (review) VALUES ( ?)", Review)
+func (r *ReviewRepository) InsertReview(Id_review int64, Id_user int64, Nama_kampus string, Nama_jurusan string, Review string, Rating int64) error {
+	_, err := r.db.Exec("INSERT INTO review (id_review, id_user, nama_kampus, nama_jurusan, review, rating) VALUES (?, ?, ?, ?, ?, ?)", Id_review, Id_user, Nama_kampus, Nama_jurusan, Review, Rating)
 	if err != nil {
 		return err
 	}
 	return nil
+
 }

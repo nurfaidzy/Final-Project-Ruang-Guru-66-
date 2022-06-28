@@ -9,8 +9,8 @@ type User struct {
 
 type Jurusan struct {
 	Id_jurusan   int64  `json:"id_jurusan"`
+	Nama_kampus  string `json:"nama_kampus"`
 	Nama_jurusan string `json:"nama_jurusan"`
-	Id_user      int64  `json:"id_user"`
 }
 
 type Kampus struct {
@@ -32,15 +32,16 @@ type Kampus struct {
 	Telepon_kampus  string `json:"telepon_kampus"`
 	Email_kampus    string `json:"email_kampus"`
 	Website_kampus  string `json:"website_kampus"`
-	Logo_kampus     string `json:"logo_kampus"`
+	Logo_Kampus     string `json:"logo_kampus"`
 }
 
 type Review struct {
-	Id_review  int64  `json:"id_review"`
-	Id_jurusan int64  `json:"id_jurusan"`
-	Id_user    int64  `json:"id_user"`
-	Rating     int64  `json:"rating"`
-	Review     string `json:"review"`
+	Id_review    int64  `json:"id_review"`
+	Id_user      int64  `json:"id_user"`
+	Nama_kampus  string `json:"nama_kampus"`
+	Nama_jurusan string `json:"nama_jurusan"`
+	Review       string `json:"review"`
+	Rating       int64  `json:"rating"`
 }
 
 func (r *Review) IsEmpetyReview() bool {

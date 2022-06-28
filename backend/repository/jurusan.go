@@ -12,14 +12,13 @@ func NewJurusanRepository(db *sql.DB) *JurusanRepository {
 
 func (j *JurusanRepository) GetListJurusan() ([]Jurusan, error) {
 	var sqlStatement string
-	var juruss []Jurusan
+	var jurusans []Jurusan
 	sqlStatement = `
 		SELECT 
 			id_jurusan,
-			nama_jurusan,
-			id_user
+			nama_kampus,
+			nama_jurusan
 		FROM jurusan
-		
 	`
 	rows, err := j.db.Query(sqlStatement)
 	if err != nil {
@@ -28,16 +27,24 @@ func (j *JurusanRepository) GetListJurusan() ([]Jurusan, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var jurus Jurusan
+		var jurusan Jurusan
 		err := rows.Scan(
-			&jurus.Id_jurusan,
-			&jurus.Nama_jurusan,
-			&jurus.Id_user,
+			&jurusan.Id_jurusan,
+			&jurusan.Nama_kampus,
+			&jurusan.Nama_jurusan,
 		)
 		if err != nil {
 			return nil, err
 		}
-		juruss = append(juruss, jurus)
+		jurusans = append(jurusans, jurusan)
 	}
-	return juruss, nil
+	return jurusans, nil
+}
+
+func (j *JurusanRepository) InsertJurusan(Nama_kampus string, Nama_jurusan string) error {
+	_, err := j.db.Exec("INSERT INTO jurusan (nama_kampus, nama_jurusan) VALUES (?, ?)", Nama_kampus, Nama_jurusan)
+	if err != nil {
+		return err
+	}
+	return nil
 }

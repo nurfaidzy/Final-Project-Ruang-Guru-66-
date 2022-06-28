@@ -24,7 +24,9 @@ func NewAPI(usersRepo repository.UserRepository, kampusRepo repository.KampusRep
 	mux.Handle("/api/user/register", http.HandlerFunc(api.register))
 	mux.Handle("/api/user/logout", http.HandlerFunc(api.logout))
 	mux.Handle("/api/kampus/list", http.HandlerFunc(api.Kampuslist))
+	mux.Handle("/api/kampus/add", http.HandlerFunc(api.AddKampus))
 	mux.Handle("/api/jurusan/list", http.HandlerFunc(api.JurusanList))
+	mux.Handle("/api/jurusan/add", http.HandlerFunc(api.AddJurusan))
 	mux.Handle("/api/review/insetreview", http.HandlerFunc(api.InsertReview))
 
 	return api

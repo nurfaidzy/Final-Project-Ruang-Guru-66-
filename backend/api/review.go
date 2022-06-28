@@ -10,7 +10,12 @@ type ReviewsErrorResponse struct {
 }
 
 type ReviewReviews struct {
-	Review string `json:"review"`
+	Id_review    int64  `json:"id_review"`
+	Id_user      int64  `json:"id_user"`
+	Nama_kampus  string `json:"nama_kampus"`
+	Nama_jurusan string `json:"nama_jurusan"`
+	Review       string `json:"review"`
+	Rating       int64  `json:"rating"`
 }
 
 type ReviewsSuccess struct {
@@ -26,7 +31,7 @@ func (api *API) InsertReview(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(ReviewsErrorResponse{Error: err.Error()})
 		return
 	}
-	err = api.reviewRepo.InsertReview(reviews.Review)
+	err = api.reviewRepo.InsertReview(reviews.Id_review, reviews.Id_user, reviews.Nama_kampus, reviews.Nama_jurusan, reviews.Review, reviews.Rating)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(ReviewsErrorResponse{Error: err.Error()})
